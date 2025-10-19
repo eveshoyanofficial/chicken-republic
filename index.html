@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Sweet Delights Bakery
+  </title>
+  <style>
+   * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            color: #0C503E;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #0C503E;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #04AA71;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #0C503E;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #04AA71;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #04AA71;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        /* Product Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #0C503E;
+        }
+
+        .product-description {
+            color: #8d6e63;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #04AA71;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #04AA71;
+            border: none;
+            border-radius: 5px;
+            color: #0C503E;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #E6F7F1;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #0C503E;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 1rem;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            background: #0C503E;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: #04AA71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #bf360c;
+        }
+
+        /* Checkout Form */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* Sections */
+        .section {
+            padding: 3rem 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .currency-note {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #8d6e63;
+            margin-bottom: 2rem;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            padding: 2rem;
+            color: #8d6e63;
+        }
+  </style>
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="header-content">
+     <div class="logo">
+      chicken republic
+     </div>
+     <nav>
+      <ul>
+       <li>
+        <a href="#" onclick="showSection('products')">
+         Products
+        </a>
+       </li>
+       <li>
+        <a href="#" onclick="showSection('about')">
+         About
+        </a>
+       </li>
+       <li class="cart-icon" onclick="toggleCart()">
+        🛒
+        <span class="cart-count">
+         0
+        </span>
+       </li>
+      </ul>
+     </nav>
+    </div>
+   </div>
+  </header>
+  <main class="container">
+   <!-- Products Section -->
+   <section class="section" id="products-section">
+    <h1>
+     Our Fresh Baked Goods
+    </h1>
+    <div class="currency-note">
+     All prices in Nigerian Naira (₦) | Exchange Rate: $1 = ₦1,400
+    </div>
+    <div class="products-grid" id="products-grid">
+     <!-- Products will be dynamically added here -->
+    </div>
+   </section>
+   <!-- About Section -->
+   <section class="section hidden" id="about-section">
+    <h1>
+     About Our Bakery
+    </h1>
+    <p>
+     Welcome to Sweet Delights Bakery! We've been serving the community with fresh, delicious baked goods since 2010. 
+            All our products are made daily with the finest ingredients and lots of love.
+    </p>
+   </section>
+  </main>
+  <!-- Cart Modal -->
+  <div class="modal" id="cart-modal">
+   <div class="modal-content">
+    <span class="close" onclick="toggleCart()">
+     ×
+    </span>
+    <h2>
+     Your Cart
+    </h2>
+    <div id="cart-items">
+     <!-- Cart items will be dynamically added here -->
+    </div>
+    <div id="cart-total">
+     <strong>
+      Total: ₦0.00
+     </strong>
+    </div>
+    <button class="checkout-btn" onclick="showCheckout()">
+     Proceed to Checkout
+    </button>
+   </div>
+  </div>
+  <!-- Checkout Modal -->
+  <div class="modal" id="checkout-modal">
+   <div class="modal-content">
+    <span class="close" onclick="toggleCheckout()">
+     ×
+    </span>
+    <h2>
+     Checkout
+    </h2>
+    <form id="checkout-form">
+     <div class="form-group">
+      <label for="name">
+       Full Name
+      </label>
+      <input id="name" required="" type="text"/>
+     </div>
+     <div class="form-group">
+      <label for="email">
+       Email
+      </label>
+      <input id="email" required="" type="email"/>
+     </div>
+     <div class="form-group">
+      <label for="phone">
+       Phone Number
+      </label>
+      <input id="phone" required="" type="tel"/>
+     </div>
+     <div class="form-group">
+      <label for="address">
+       Delivery Address
+      </label>
+      <input id="address" required="" type="text"/>
+     </div>
+     <div class="form-group">
+      <label for="payment-method">
+       Payment Method
+      </label>
+      <select id="payment-method" required="">
+       <option value="">
+        Select Payment Method
+       </option>
+       <option value="card">
+        Credit/Debit Card
+       </option>
+       <option value="transfer">
+        Bank Transfer
+       </option>
+       <option value="cash">
+        Cash on Delivery
+       </option>
+      </select>
+     </div>
+     <button class="checkout-btn" type="submit">
+      Place Order
+     </button>
+    </form>
+   </div>
+  </div>
+  <script>
+   // Exchange rate
+        const EXCHANGE_RATE = 1400;
+
+        // Convert USD to Naira
+        function convertToNaira(usdPrice) {
+            return Math.round(usdPrice * EXCHANGE_RATE);
+        }
+
+        // Format Naira price with commas
+        function formatNaira(amount) {
+            return '₦' + amount.toLocaleString('en-NG');
+        }
+
+        // Bakery products data with the provided images
+        const products = [
+            {
+                id: 1,
+                name: "Refuel Jumbo",
+                price: convertToNaira(2.07),
+                description: "Freshly baked cookies with premium chocolate chips, crispy on the outside and chewy on the inside.",
+                image: "https://chowdeck.com/store/_next/image?url=https%3A%2F%2Fmenu-images-production.s3.eu-west-1.amazonaws.com%2Ff1aaf167-31b9-525a-a90d-26f9f660f879.jpeg&w=1920&q=75"
+            },
+            {
+                id: 2,
+                name: "Citizens Meal without drink",
+                price: convertToNaira(2.99),
+                description: "Buttery, flaky French croissants with golden layers, perfect for breakfast or as a snack.",
+                image: "https://chowdeck.com/store/_next/image?url=https%3A%2F%2Fmenu-images-production.s3.eu-west-1.amazonaws.com%2F85df5e40-eb15-53ae-89b4-0cacf83e95c0.jpeg&w=1920&q=75"
+            },
+            {
+                id: 3,
+                name: "Refuel Meal",
+                price: convertToNaira(0.86),
+                description: "A hearty meal with grilled chicken, rice, and vegetables.",
+                image: "https://chowdeck.com/store/_next/image?url=https%3A%2F%2Fmenu-images-production.s3.eu-west-1.amazonaws.com%2F9f13569a-3577-5612-980a-2cb7f8619fbd.jpeg&w=1920&q=75"
+            },
+            {
+                id: 4,
+                name: "Refuel Full Option (Free Coleslaw)",
+                price: convertToNaira(1.86),
+                description: "Moist and fluffy muffins packed with fresh blueberries and a hint of lemon zest.",
+                image: "https://chowdeck.com/store/_next/image?url=https%3A%2F%2Fmenu-images-production.s3.eu-west-1.amazonaws.com%2Fda06269f-4cbf-554a-85f2-ce59b6b4d109.jpeg&w=1920&q=75"
+            },
+            {
+                id: 5,
+                name: "Shawarma Original",
+                price: convertToNaira(2.36),
+                description: "Traditional shawarma wrap with grilled chicken, fresh vegetables, and tangy sauce.",
+                image: "https://chowdeck.com/store/_next/image?url=https%3A%2F%2Fmenu-images-production.s3.eu-west-1.amazonaws.com%2F230062a2-7164-579e-a650-10efd5005cab.jpeg&w=1920&q=75"
+            },
+            {
+                id: 6,
+                name: "Chips",
+                price: convertToNaira(1.714),
+                description: "Crispy potato chips seasoned to perfection.",
+                image: "https://chowdeck.com/store/_next/image?url=https%3A%2F%2Fmenu-images-production.s3.eu-west-1.amazonaws.com%2F3d0326c6-0889-5248-9ad1-db1d75834c65.jpeg&w=1920&q=75"
+            }
+        ];
+
+        let cart = [];
+        let currentSection = 'products';
+
+        // Initialize the store
+        function initStore() {
+            renderProducts();
+            updateCartCount();
+        }
+
+        // Render products grid
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    </div>
+                    <h3 class="product-title">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <div class="product-price">${formatNaira(product.price)}</div>
+                    <button class="add-to-cart" onclick="addToCart(${product.id})">
+                        Add to Cart
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Cart functionality
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+
+            updateCartCount();
+            showNotification(`${product.name} added to cart!`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            if (document.getElementById('cart-modal').style.display === 'block') {
+                renderCart();
+            }
+        }
+
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartCount();
+                    if (document.getElementById('cart-modal').style.display === 'block') {
+                        renderCart();
+                    }
+                }
+            }
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = totalItems;
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
+                cartTotal.innerHTML = '<strong>Total: ₦0.00</strong>';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="cart-item-info">
+                        <strong>${item.name}</strong>
+                        <div>${formatNaira(item.price)} × ${item.quantity}</div>
+                        <div>Subtotal: ${formatNaira(item.price * item.quantity)}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button class="quantity-btn" onclick="removeFromCart(${item.id})" title="Remove">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.innerHTML = `<strong>Total: ${formatNaira(total)}</strong>`;
+        }
+
+        // Modal controls
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            if (modal.style.display === 'block') {
+                modal.style.display = 'none';
+            } else {
+                renderCart();
+                modal.style.display = 'block';
+            }
+        }
+
+        function showCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!');
+                return;
+            }
+            document.getElementById('cart-modal').style.display = 'none';
+            document.getElementById('checkout-modal').style.display = 'block';
+        }
+
+        function toggleCheckout() {
+            const modal = document.getElementById('checkout-modal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Section navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.getElementById('products-section').classList.add('hidden');
+            document.getElementById('about-section').classList.add('hidden');
+
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            currentSection = sectionName;
+        }
+
+        // Notification system
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4caf50;
+                color: white;
+                padding: 1rem;
+                border-radius: 5px;
+                z-index: 1001;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            `;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        // Form submission
+        document.getElementById('checkout-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const paymentMethod = document.getElementById('payment-method').value;
+            const paymentMethodText = {
+                'card': 'Credit/Debit Card',
+                'transfer': 'Bank Transfer',
+                'cash': 'Cash on Delivery'
+            }[paymentMethod];
+            
+            showNotification(`Order placed successfully! Total: ${formatNaira(total)} | Payment: ${paymentMethodText}`);
+            
+            // Reset cart and close modals
+            cart = [];
+            updateCartCount();
+            toggleCheckout();
+            this.reset();
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const cartModal = document.getElementById('cart-modal');
+            const checkoutModal = document.getElementById('checkout-modal');
+            
+            if (event.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+            if (event.target === checkoutModal) {
+                checkoutModal.style.display = 'none';
+            }
+        }
+
+        // Initialize the store when page loads
+        window.onload = initStore;
+  </script>
+ </body>
+</html>
